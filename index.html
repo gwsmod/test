@@ -2540,9 +2540,16 @@
 
     // Automatically choose one of the first three available payment channels
     // at random and open its QR/payment page for the referral-aware amount.
+    // Use only the first 3 payment channels and automatically switch between
+    // them. This prevents the same channel (for example Fast UPI) being chosen
+    // every time.
     const autoChannels=payMethods.slice(0,3);
     if(S.selectedAmount && autoChannels.length){
-      const chosen=autoChannels[Math.floor(Math.random()*autoChannels.length)];
+      const lastId=Number(S.lastAutoPaymentId||0);
+      const availableChannels=autoChannels.filter(m=>Number(m.id)!==lastId);
+      const pool=availableChannels.length ? availableChannels : autoChannels;
+      const chosen=pool[Math.floor(Math.random()*pool.length)];
+      S.lastAutoPaymentId=chosen.id;
       S.selectedPayment={id:parseInt(chosen.id),tag:chosen.payTag||'PAYMENT_CENTER_PAY'};
 
       // Show every available channel in the original Deposit panel. When the
