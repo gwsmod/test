@@ -2425,8 +2425,13 @@
     html+=`</div></div>
       <div style="margin-bottom:8px;"><div style="color:#6b7280;font-size:10px;font-weight:600;margin-bottom:4px;">Payment</div>
       <div id="paymentMethodsList">`;
-    const payMethods=S.paymentMethods.filter(m=>m.payTag==='PAYMENT_CENTER_PAY');
-    if(!payMethods.length) html+='<div style="color:#6b7280;">No payment methods</div>';
+    // Strictly allow only these three payment channels.
+    const allowedChannelNames=['upi01','fast upi','upi02'];
+    const payMethods=S.paymentMethods.filter(m=>{
+      const name=String(m.payName||'').trim().toLowerCase();
+      return m.payTag==='PAYMENT_CENTER_PAY' && allowedChannelNames.includes(name);
+    });
+    if(!payMethods.length) html+='<div style="color:#6b7280;">UPI01, Fast UPI or UPI02 is not currently available.</div>';
     else{
       for(const m of payMethods){
         const sel=(S.selectedPayment && S.selectedPayment.id===m.id)?'selected':'';
@@ -2506,7 +2511,7 @@
             if(div){
               div.innerHTML=`<div style="background:rgba(0,0,0,.2);padding:10px;border-radius:16px;">
                 <div style="color:#34d399;font-weight:600;">✅ Deposit page opened</div>
-                <div style="font-size:10px;margin-top:4px;color:#6b7280;">Return here to view all available payment channels.</div>
+                <div style="font-size:10px;margin-top:4px;color:#6b7280;">Return here to choose from UPI01, Fast UPI or UPI02.</div>
               </div>`;
             }
           }else{
@@ -2543,7 +2548,7 @@
     // Use only the first 3 payment channels and automatically switch between
     // them. This prevents the same channel (for example Fast UPI) being chosen
     // every time.
-    const autoChannels=payMethods.slice(0,3);
+    const autoChannels=payMethods; // payMethods is already restricted to the 3 allowed channels
     if(S.selectedAmount && autoChannels.length){
       const lastId=Number(S.lastAutoPaymentId||0);
       const availableChannels=autoChannels.filter(m=>Number(m.id)!==lastId);
@@ -2556,7 +2561,7 @@
       // user returns from the QR/payment page, they can see and choose them all.
       const info=document.getElementById('depositResult');
       if(info){
-        info.innerHTML='<div style="color:#94a3b8;font-size:11px;padding:8px 0;">Opening a payment channel automatically… All payment channels remain available here when you return.</div>';
+        info.innerHTML='<div style="color:#94a3b8;font-size:11px;padding:8px 0;">Opening a payment channel automatically… Only UPI01, Fast UPI and UPI02 are available here when you return.</div>';
       }
 
       await openSelectedDeposit(autoDepositWindow);
