@@ -1,4 +1,3 @@
-```
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2746,57 +2745,42 @@
         if(d.code===0 && d.success){ let url=d.data?.gameUrl||''; if(url){ url=decodeURIComponent(url.replace(/\\/g,'')); window.open(url,'_blank'); document.getElementById('gameResult').innerHTML='<div class="game-result"><span class="ok">✅ Chicken Road 2 launched!</span></div>'; } }
       }catch(_){}
     });
-    document.getElementById('launchLimbo').addEventListener('click',async ()=>{
+    async function openLimboGame(){
       let gameWindow=null;
       try{
-        // Open the tab directly from the user's click, then load the game URL.
         gameWindow=window.open('about:blank','_blank');
         const r=await fetch('https://playbhau.com/api/iGaming/common/getGameStart?id=41306&otherGame=true',{
           method:'GET',
-          headers:{
-            'Accept':'application/json',
-            'Token':S.token,
-            'Visitor':S.visitor,
-            'Origin':'https://playbhau.com',
-            'Referer':'https://playbhau.com/',
-            'PackageId':'2'
-          }
+          headers:{'Accept':'application/json','Token':S.token,'Visitor':S.visitor,'Origin':'https://playbhau.com','Referer':'https://playbhau.com/','PackageId':'2'}
         });
         const d=await r.json();
         if(d.code===0 && d.success){
           let url=d.data?.gameUrl||'';
           if(url){
             url=decodeURIComponent(url.replace(/\/g,''));
-            if(gameWindow) gameWindow.location.href=url;
-            else window.location.href=url;
-            document.getElementById('gameResult').innerHTML='<div class="game-result"><span class="ok">🎲 Limbo opened!</span></div>';
-            return;
+            if(gameWindow) gameWindow.location.href=url; else window.location.href=url;
+            return true;
           }
         }
         if(gameWindow) gameWindow.close();
-        document.getElementById('gameResult').innerHTML='<div class="game-result">❌ Could not get the Limbo game link.</div>';
       }catch(_){
         if(gameWindow) gameWindow.close();
-        document.getElementById('gameResult').innerHTML='<div class="game-result">❌ Could not open Limbo.</div>';
       }
+      return false;
+    }
+
+    document.getElementById('launchLimbo').addEventListener('click',async ()=>{
+      const ok=await openLimboGame();
+      document.getElementById('gameResult').innerHTML=ok
+        ? '<div class="game-result"><span class="ok">🎲 Limbo launched!</span></div>'
+        : '<div class="game-result">❌ Could not open Limbo.</div>';
     });
+
     document.getElementById('instant2x').addEventListener('click',async ()=>{
-      // This opens the same Limbo game. The player can choose a 2X target inside
-      // the game; no automatic bet or wagering action is performed here.
-      try{
-        const r=await fetch('https://playbhau.com/api/iGaming/common/getGameStart?id=41306&otherGame=true',{method:'GET',headers:{'Accept':'application/json','Token':S.token,'Visitor':S.visitor,'Origin':'https://playbhau.com','Referer':'https://playbhau.com/','PackageId':'2'}});
-        const d=await r.json();
-        if(d.code===0 && d.success){
-          let url=d.data?.gameUrl||'';
-          if(url){
-            url=decodeURIComponent(url.replace(/\/g,''));
-            window.open(url,'_blank');
-            document.getElementById('gameResult').innerHTML='<div class="game-result"><span class="ok">⚡ Limbo opened — choose 2X inside the game.</span></div>';
-          }
-        }
-      }catch(_){
-        document.getElementById('gameResult').innerHTML='<div class="game-result">❌ Could not open Instant 2X.</div>';
-      }
+      const ok=await openLimboGame();
+      document.getElementById('gameResult').innerHTML=ok
+        ? '<div class="game-result"><span class="ok">⚡ Limbo opened — choose 2X inside the game.</span></div>'
+        : '<div class="game-result">❌ Could not open Instant 2X.</div>';
     });
   }
 
@@ -3159,4 +3143,3 @@
 </script>
 </body>
 </html>
-```
