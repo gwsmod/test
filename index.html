@@ -2398,9 +2398,13 @@
     dynamicContent.innerHTML=html;
     dynamicContent.style.display='block';
 
-    // When any dashboard option opens its panel, hide all dashboard option
-    // buttons. They stay hidden until the panel's Close button is used.
-    document.querySelectorAll('.menu-grid').forEach(grid=>grid.classList.add('options-hidden'));
+    // Keep the full dashboard menu visible for lightweight actions such as
+    // Auto Claim and Show Balance. Other full option panels keep the existing
+    // hide-until-Close behavior.
+    const keepOptionsVisible = S.currentPanel==='autoclaim' || S.currentPanel==='balance';
+    document.querySelectorAll('.menu-grid').forEach(grid=>{
+      grid.classList.toggle('options-hidden', !keepOptionsVisible);
+    });
 
     document.querySelectorAll('.menu-item').forEach(el=>el.classList.remove('active-option'));
     S.isPanelOpen=true;
@@ -2715,7 +2719,10 @@
         cardHtml+=`<div class="payment-method card-item ${sel}" data-id="${id}"><div><div class="pm-name">${bank} - ${holder}</div><div class="pm-desc">${acc?'****'+acc.slice(-4):''}</div></div></div>`;
       }
       cardHtml+=`</div></div>`;
-    }else cardHtml='<div style="color:#fb7185;font-size:12px;text-align:center;padding:8px;">❌ No bank card found. Please add a card first.</div>';
+    }else cardHtml=`<div style="text-align:center;padding:8px 8px 12px;">
+      <div style="color:#fb7185;font-size:12px;margin-bottom:10px;">❌ No bank card found. Please add a card first.</div>
+      <button type="button" id="withdrawAddCardBtn" class="btn-sm" style="padding:10px 18px;border-radius:14px;background:linear-gradient(135deg,#34d399,#0f9f74);color:#071a16;border:0;font-weight:800;cursor:pointer;box-shadow:0 5px 16px rgba(16,185,129,.22);">💳 Add Bank Card ➜</button>
+    </div>`;
 
     showPanel(`<div class="dynamic-card"><div class="title">💸 Withdraw Funds <button class="btn-close-panel" onclick="window._closePanel()">✕ Close</button></div>
       <div class="balance-info">Available Balance: <span>₹${S.balance.toFixed(2)}</span></div>
@@ -2725,6 +2732,12 @@
       </div>
       <button class="btn-sm btn-withdraw btn-block" id="withdrawSubmitBtn" ${!S.withdrawCards||!S.withdrawCards.length?'disabled':''}>💸 Withdraw Now</button>
       <div id="withdrawResult" class="mt-10"></div></div>`);
+
+    // If no card is available, the Add Bank Card button opens the existing
+    // Bank Card panel directly. No withdrawal logic is changed.
+    document.getElementById('withdrawAddCardBtn')?.addEventListener('click',()=>{
+      renderAddCard();
+    });
 
     document.querySelectorAll('.card-item').forEach(el=>{
       el.addEventListener('click',function(){
