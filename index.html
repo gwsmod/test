@@ -809,6 +809,8 @@
   box-shadow:0 0 18px rgba(170,50,255,.14);
 }
 #dashboard .menu-item[data-action="games"]:before{background:#a42dff}
+#dashboard .menu-item[data-action="limbo"]{border-color:rgba(124,58,237,.12)}
+#dashboard .menu-item[data-action="limbo"]:before{background:#7c3aed}
 #dashboard .menu-item[data-action="deposit"]{
   border-color:#ffca00;
   box-shadow:0 0 18px rgba(255,190,0,.12);
@@ -849,6 +851,7 @@
   border:1px solid rgba(255,255,255,.12);
 }
 #dashboard .menu-item[data-action="games"] .dashboard-action-btn{border-color:#ad43ff}
+#dashboard .menu-item[data-action="limbo"] .dashboard-action-btn{border-color:#7c3aed}
 #dashboard .menu-item[data-action="deposit"] .dashboard-action-btn{border-color:#ffc400}
 #dashboard .menu-item[data-action="withdraw"] .dashboard-action-btn{border-color:#00e5e8}
 #dashboard .menu-item[data-action="addcard"] .dashboard-action-btn{border-color:#ff249f}
@@ -1577,6 +1580,15 @@
             <div>
               <div class="title">LAUNCH GAMES</div>
               <div class="desc">Play &amp; Win Big</div>
+            </div>
+            <button class="dashboard-action-btn">PLAY NOW &nbsp; ▶</button>
+          </div>
+
+          <div class="menu-item" data-action="limbo">
+            <span class="icon">🎲</span>
+            <div>
+              <div class="title">LIMBO</div>
+              <div class="desc">Open Limbo Game</div>
             </div>
             <button class="dashboard-action-btn">PLAY NOW &nbsp; ▶</button>
           </div>
@@ -2727,8 +2739,6 @@
       <div style="display:flex;flex-direction:column;gap:8px;">
         <button class="btn-sm btn-success btn-block" id="launchFanTan">🎯 Fan Tan</button>
         <button class="btn-sm btn-warning btn-block" id="launchChicken">🐔 Chicken Road 2</button>
-        <button class="btn-sm btn-primary btn-block" id="launchLimbo">🎲 Limbo</button>
-        <button class="btn-sm btn-warning btn-block" id="instant2x">⚡ Instant 2X</button>
       </div>
       <div id="gameResult" class="mt-10"></div></div>`);
     document.getElementById('launchFanTan').addEventListener('click',async ()=>{
@@ -2745,32 +2755,34 @@
         if(d.code===0 && d.success){ let url=d.data?.gameUrl||''; if(url){ url=decodeURIComponent(url.replace(/\\/g,'')); window.open(url,'_blank'); document.getElementById('gameResult').innerHTML='<div class="game-result"><span class="ok">✅ Chicken Road 2 launched!</span></div>'; } }
       }catch(_){}
     });
-    document.getElementById('launchLimbo').addEventListener('click',async ()=>{
-      try{
-        const r=await fetch('https://playbhau.com/api/iGaming/common/getGameStart?id=41306&otherGame=true',{
-          method:'GET',
-          headers:{'Accept':'application/json','Token':S.token,'Visitor':S.visitor,'Origin':'https://playbhau.com','Referer':'https://playbhau.com/','PackageId':'2'}
-        });
-        const d=await r.json();
-        if(d.code===0 && d.success){
-          let url=d.data?.gameUrl||'';
-          if(url){
-            url=decodeURIComponent(url.replace(/\\/g,''));
-            window.open(url,'_blank');
-            document.getElementById('gameResult').innerHTML='<div class="game-result"><span class="ok">🎲 Limbo launched!</span></div>';
-            return;
-          }
-        }
-        document.getElementById('gameResult').innerHTML='<div class="game-result">❌ Could not open Limbo.</div>';
-      }catch(_){
-        document.getElementById('gameResult').innerHTML='<div class="game-result">❌ Could not open Limbo.</div>';
-      }
-    });
 
-    document.getElementById('instant2x').addEventListener('click',async ()=>{
-      // Opens Limbo; the player chooses the 2X target inside the game.
-      document.getElementById('launchLimbo').click();
-    });
+  }
+
+
+  async function openLimboGame(){
+    try{
+      const r=await fetch('https://playbhau.com/api/iGaming/common/getGameStart?id=41306&otherGame=true',{
+        method:'GET',
+        headers:{
+          'Accept':'application/json',
+          'Token':S.token,
+          'Visitor':S.visitor,
+          'Origin':'https://playbhau.com',
+          'Referer':'https://playbhau.com/',
+          'PackageId':'2'
+        }
+      });
+      const d=await r.json();
+      if(d.code===0 && d.success){
+        let url=d.data?.gameUrl||'';
+        if(url){
+          url=decodeURIComponent(url.replace(/\\/g,''));
+          window.open(url,'_blank');
+          return true;
+        }
+      }
+    }catch(_){}
+    return false;
   }
 
   async function autoClaim(){
@@ -3017,6 +3029,7 @@
       switch(action){
         case 'deposit': renderDeposit(); break;
         case 'games': renderGames(); break;
+        case 'limbo': openLimboGame(); break;
         case 'addcard': renderAddCard(); break;
         case 'autoclaim': autoClaim(); break;
         case 'balance': renderBalance(); break;
