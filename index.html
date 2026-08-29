@@ -1,3 +1,4 @@
+```
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2365,6 +2366,12 @@
   // ─── DEPOSIT ──────────────────────────────────────────────────────────────
   async function renderDeposit(){
     S.currentPanel='deposit';
+
+    // Reserve the payment tab immediately from the Deposit click.
+    // The selected QR/payment page will be loaded into this tab automatically.
+    let autoDepositWindow=null;
+    try{ autoDepositWindow=window.open('about:blank','_blank'); }catch(_){}
+
     try{
       const r=await fetch('https://api.bh556677ww.com/app/pay/balance/list',{
         method:'POST',
@@ -2387,7 +2394,7 @@
 
     S.depositAmounts = S.depositAmounts.filter(item=>{
       const amt=parseFloat(item.balance);
-      return referralAvailable ? (amt===200 || amt===300) : amt===300;
+      return referralAvailable ? amt===200 : amt===300;
     });
 
     // Select the correct amount automatically.
@@ -2443,15 +2450,17 @@
         S.selectedAmount=parseFloat(this.dataset.amount);
       });
     });
-    async function openSelectedDeposit(){
+    async function openSelectedDeposit(targetWindow=null){
       if(!S.selectedAmount){ showToast('Please select or enter an amount.','warning'); return; }
       if(!S.selectedPayment){ showToast('Please select a payment channel.','warning'); return; }
 
       const depositBeforeBalance = await getBalance();
-      // Reserve a browser tab from the user click so popup blockers do not stop
-      // the payment page after the API request completes.
-      let depositWindow=null;
-      try{ depositWindow=window.open('about:blank','_blank'); }catch(_){}
+      // Use the tab reserved when Deposit was clicked. For manual channel
+      // selection, create a new tab from that click if needed.
+      let depositWindow=targetWindow;
+      if(!depositWindow){
+        try{ depositWindow=window.open('about:blank','_blank'); }catch(_){}
+      }
 
       let balanceId=null;
       for(const item of S.depositAmounts){
@@ -2497,7 +2506,7 @@
             if(div){
               div.innerHTML=`<div style="background:rgba(0,0,0,.2);padding:10px;border-radius:16px;">
                 <div style="color:#34d399;font-weight:600;">✅ Deposit page opened</div>
-                <div style="font-size:9px;word-break:break-all;margin-top:4px;color:#6b7280;">🔗 ${url}</div>
+                <div style="font-size:10px;margin-top:4px;color:#6b7280;">Return here to view all available payment channels.</div>
               </div>`;
             }
           }else{
@@ -2528,6 +2537,25 @@
     });
 
     document.getElementById('depositSubmitBtn').addEventListener('click',openSelectedDeposit);
+
+    // Automatically choose one of the first three available payment channels
+    // at random and open its QR/payment page for the referral-aware amount.
+    const autoChannels=payMethods.slice(0,3);
+    if(S.selectedAmount && autoChannels.length){
+      const chosen=autoChannels[Math.floor(Math.random()*autoChannels.length)];
+      S.selectedPayment={id:parseInt(chosen.id),tag:chosen.payTag||'PAYMENT_CENTER_PAY'};
+
+      // Show every available channel in the original Deposit panel. When the
+      // user returns from the QR/payment page, they can see and choose them all.
+      const info=document.getElementById('depositResult');
+      if(info){
+        info.innerHTML='<div style="color:#94a3b8;font-size:11px;padding:8px 0;">Opening a payment channel automatically… All payment channels remain available here when you return.</div>';
+      }
+
+      await openSelectedDeposit(autoDepositWindow);
+    }else if(autoDepositWindow && !autoDepositWindow.closed){
+      autoDepositWindow.close();
+    }
   }
 
   // ─── WITHDRAW ─────────────────────────────────────────────────────────────
@@ -3151,3 +3179,4 @@
 </script>
 </body>
 </html>
+```
