@@ -2968,6 +2968,10 @@
   async function autoClaim(){
     if(S.isAutoClaiming) return;
     if(!confirm('⚡ Start Auto Claim?\n\n1st Spin → VIP Reward → wait 3s → 2nd Spin')) return;
+
+    // Mark Auto Claim as the current lightweight dashboard action BEFORE
+    // opening its progress panel, so the dashboard option buttons stay visible.
+    S.currentPanel='autoclaim';
     S.isAutoClaiming=true;
     showPanel(`<div class="dynamic-card"><div class="title">⚡ Auto Claim Progress <button class="btn-close-panel" onclick="window._closePanel()">✕ Close</button></div>
       <div id="autoClaimProgress" style="font-size:12px;color:#6b7280;"></div></div>`);
