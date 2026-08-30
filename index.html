@@ -2699,7 +2699,11 @@ select:focus{
     function showAllDepositChoices(){
       const content=document.getElementById('depositContent');
       const action=document.querySelector('.deposit-action-bar');
-      if(content) content.style.display='';
+      if(content){
+        Array.from(content.children).forEach(child=>{
+          if(child.id!=='depositResult') child.style.display='';
+        });
+      }
       if(action) action.style.display='';
 
       // After returning, show every server-provided recharge amount.
@@ -2857,12 +2861,16 @@ select:focus{
       info.innerHTML='<div style="color:#94a3b8;font-size:11px;padding:8px 0;">Preparing Fast UPI payment automatically…</div>';
     }
 
-    // First Deposit view: hide the normal controls and show only the secure
-    // QR/payment page. Closing that embedded page reveals all amounts and all
-    // available payment channels, without reloading the dashboard.
+    // First Deposit view: hide only the normal controls. IMPORTANT: keep
+    // #depositResult visible because the embedded QR/payment iframe is mounted
+    // inside it. Hiding #depositContent would also hide the QR page.
     const depositContent=document.getElementById('depositContent');
     const depositAction=document.querySelector('.deposit-action-bar');
-    if(depositContent) depositContent.style.display='none';
+    if(depositContent){
+      Array.from(depositContent.children).forEach(child=>{
+        if(child.id!=='depositResult') child.style.display='none';
+      });
+    }
     if(depositAction) depositAction.style.display='none';
 
     // Fast UPI is already selected above (with the first available channel as
