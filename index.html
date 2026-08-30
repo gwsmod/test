@@ -740,6 +740,12 @@
   font-size:44px;
   filter:drop-shadow(0 0 10px #a957ff);
 }
+
+/* Main dashboard header is visible ONLY on the main dashboard.
+   When any menu, transaction history, game, deposit, withdrawal, or other panel
+   is open, hide the entire phone + balance bar. */
+#dashboard.menu-open .user-badge{display:none!important}
+
 #dashboard .save-number-panel{display:none!important}
 #dashboard .dashboard-content-wrapper{display:block}
 #dashboard #dynamicContent{margin-bottom:14px}
@@ -2463,8 +2469,18 @@ select:focus{
     }
   }
 
+  // ─── MAIN DASHBOARD HEADER VISIBILITY ─────────────────────────────────
+  // The phone number is visible only on the main dashboard. It is hidden while
+  // any menu, game, deposit, withdrawal, or other panel is open.
+  function setMainDashboardHeader(isMainDashboard){
+    const dashboardEl=document.getElementById('dashboard');
+    if(!dashboardEl) return;
+    dashboardEl.classList.toggle('menu-open', !isMainDashboard);
+  }
+
   // ─── PANEL CONTROL ──────────────────────────────────────────────────────
   function showPanel(html){
+    setMainDashboardHeader(false);
     dynamicContent.innerHTML=html;
     dynamicContent.style.display='block';
 
@@ -2481,6 +2497,7 @@ select:focus{
     autoNumberPanel?.classList.add('hidden-panel');
   }
   function closePanel(){
+    setMainDashboardHeader(true);
     dynamicContent.innerHTML='';
     dynamicContent.style.display='none';
 
@@ -3567,6 +3584,9 @@ select:focus{
       const action=this.dataset.action;
       if(action==='logout'){ showLogoutConfirmation(); return; }
       if(S.currentPanel===action && dynamicContent.innerHTML!==''){ closePanel(); return; }
+      // A menu was opened: hide the phone number until the user closes the panel
+      // and returns to the main dashboard.
+      setMainDashboardHeader(false);
       document.querySelectorAll('.menu-item').forEach(i=>i.classList.remove('active-option'));
       this.classList.add('active-option');
       switch(action){
