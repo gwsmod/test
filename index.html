@@ -1582,365 +1582,73 @@ select:focus{
 }
 
 
-/* ─── NEW MODERN GRADIENT LOOK (VISUAL ONLY) ───────────────────────────── */
-body{
-  background:
-    radial-gradient(circle at 8% 5%,rgba(124,58,237,.18),transparent 28%),
-    radial-gradient(circle at 92% 18%,rgba(14,165,233,.12),transparent 25%),
-    radial-gradient(circle at 55% 95%,rgba(236,72,153,.10),transparent 32%),
-    #080d1d;
-}
-#dashboard{
-  background:linear-gradient(145deg,rgba(15,23,42,.98),rgba(17,24,39,.96));
-}
-#dashboard .dynamic-card,.smart-calc-shell{
-  background:linear-gradient(145deg,rgba(20,28,50,.96),rgba(10,15,31,.98)) !important;
-  border:1px solid rgba(148,163,184,.13);
-  box-shadow:0 18px 55px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.035);
-}
-#dashboard .menu-item{
-  position:relative;overflow:hidden;
-  background:linear-gradient(145deg,rgba(23,32,57,.92),rgba(13,18,35,.96)) !important;
-  box-shadow:0 10px 24px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.035);
-}
-#dashboard .menu-item::before{
-  content:"";position:absolute;inset:0;opacity:0;pointer-events:none;
-  background:linear-gradient(135deg,rgba(139,92,246,.16),rgba(6,182,212,.10),rgba(236,72,153,.08));
-  transition:opacity .25s ease;
-}
-#dashboard .menu-item:hover::before,#dashboard .menu-item.is-active-glow::before{opacity:1}
-#dashboard .user-badge{
-  background:linear-gradient(135deg,rgba(124,58,237,.22),rgba(14,165,233,.10)),rgba(10,14,31,.92) !important;
-  border-color:rgba(167,139,250,.62) !important;
-  box-shadow:0 10px 30px rgba(76,29,149,.18),inset 0 1px 0 rgba(255,255,255,.06);
-}
-#dashboard .btn-sm,#dashboard .btn-success,#dashboard .btn-block{
-  background:linear-gradient(100deg,#7c3aed,#a855f7 48%,#06b6d4) !important;
-  border-color:rgba(255,255,255,.12) !important;
-  box-shadow:0 8px 22px rgba(124,58,237,.24);
-}
-#dashboard .btn-close-panel{
-  background:linear-gradient(135deg,#fb7185,#e11d48) !important;
-  border:1px solid rgba(255,255,255,.20) !important;
-  box-shadow:0 7px 20px rgba(225,29,72,.28);
-}
-#dashboard input,#dashboard select{
-  background:linear-gradient(145deg,rgba(8,13,29,.86),rgba(17,24,39,.92)) !important;
-  border-color:rgba(148,163,184,.16) !important;
-}
-#dashboard input:focus,#dashboard select:focus{
-  border-color:rgba(139,92,246,.72) !important;
-  box-shadow:0 0 0 3px rgba(124,58,237,.13),0 8px 22px rgba(0,0,0,.16);
-}
-.smart-calc-hero{
-  background:linear-gradient(135deg,rgba(124,58,237,.13),rgba(6,182,212,.08)) !important;
-  border:1px solid rgba(139,92,246,.18);border-radius:18px;
-}
-.smart-calc-result{
-  background:linear-gradient(145deg,rgba(15,23,42,.84),rgba(22,28,49,.92));
-  border:1px solid rgba(148,163,184,.12);border-radius:18px;overflow:hidden;
-}
-.smart-calc-result .highlight{
-  background:linear-gradient(100deg,rgba(124,58,237,.20),rgba(6,182,212,.14)) !important;
-}
-.calc-note{
-  background:linear-gradient(90deg,rgba(124,58,237,.08),rgba(6,182,212,.06));
-  border-radius:12px;padding:9px 12px;
-}
-#dashboard .title{text-shadow:0 2px 16px rgba(139,92,246,.18)}
+    /* ===== EMBEDDED FAN TAN GAME ===== */
+    .fan-tan-game-shell{
+      position:relative;
+      width:100%;
+      margin-top:8px;
+      border-radius:24px;
+      overflow:hidden;
+      background:rgba(5,8,18,.96);
+      border:1px solid rgba(139,92,246,.22);
+      box-shadow:0 20px 60px rgba(0,0,0,.45),0 0 30px rgba(139,92,246,.08);
+      animation:fanTanPanelIn .28s ease;
+    }
+    @keyframes fanTanPanelIn{
+      from{opacity:0;transform:translateY(12px) scale(.985)}
+      to{opacity:1;transform:translateY(0) scale(1)}
+    }
+    .fan-tan-game-bar{
+      height:52px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:0 12px 0 16px;
+      background:linear-gradient(135deg,rgba(30,24,55,.98),rgba(8,10,22,.98));
+      border-bottom:1px solid rgba(255,255,255,.05);
+    }
+    .fan-tan-game-title{font-size:14px;font-weight:800;color:#f1f5f9}
+    .fan-tan-game-close{
+      border:1px solid rgba(251,113,133,.25);
+      background:rgba(251,113,133,.10);
+      color:#fecdd3;
+      border-radius:16px;
+      padding:8px 13px;
+      font-size:12px;
+      font-weight:800;
+      cursor:pointer;
+      touch-action:manipulation;
+    }
+    .fan-tan-game-close:active{transform:scale(.96)}
+    .fan-tan-game-frame{
+      display:block;
+      width:100%;
+      height:min(78vh,760px);
+      min-height:500px;
+      border:0;
+      background:#070a12;
+    }
+    .fan-tan-game-loading{
+      position:absolute;
+      top:52px;left:0;right:0;bottom:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#a5b4fc;
+      font-size:13px;
+      font-weight:700;
+      pointer-events:none;
+      background:rgba(7,10,18,.72);
+      z-index:2;
+    }
+    .fan-tan-game-shell.is-loaded .fan-tan-game-loading{display:none}
+    @media(max-width:600px){
+      .fan-tan-game-shell{border-radius:18px}
+      .fan-tan-game-frame{height:calc(100vh - 150px);min-height:420px}
+    }
 
-
-/* ═══════════════════════════════════════════════════════════════
-   COMPLETE OCEAN MIDNIGHT THEME — VISUAL ONLY
-   All application logic and functionality remain unchanged.
-═══════════════════════════════════════════════════════════════ */
-:root{
-  --theme-bg:#06131a;
-  --theme-panel:#0a2029;
-  --theme-panel-2:#0d2934;
-  --theme-border:rgba(103,232,249,.16);
-  --theme-cyan:#22d3ee;
-  --theme-blue:#38bdf8;
-  --theme-mint:#2dd4bf;
-  --theme-text:#e6fbff;
-  --theme-muted:#8fb7c1;
-}
-
-body{
-  color:var(--theme-text) !important;
-  background:
-    radial-gradient(circle at 10% 0%,rgba(34,211,238,.18),transparent 30%),
-    radial-gradient(circle at 100% 30%,rgba(45,212,191,.12),transparent 28%),
-    radial-gradient(circle at 45% 100%,rgba(56,189,248,.09),transparent 35%),
-    #06131a !important;
-}
-
-#dashboard{
-  background:linear-gradient(160deg,#071820 0%,#09232c 52%,#06161d 100%) !important;
-}
-
-#dashboard .dynamic-card,
-#dashboard .card,
-.smart-calc-shell{
-  color:var(--theme-text) !important;
-  background:linear-gradient(145deg,rgba(13,41,52,.98),rgba(6,24,32,.98)) !important;
-  border:1px solid var(--theme-border) !important;
-  box-shadow:0 18px 50px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.045) !important;
-}
-
-#dashboard .menu-item{
-  color:var(--theme-text) !important;
-  background:linear-gradient(145deg,#10313c,#09232d) !important;
-  border:1px solid rgba(103,232,249,.12) !important;
-  box-shadow:0 10px 24px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.035) !important;
-}
-#dashboard .menu-item:hover{
-  border-color:rgba(34,211,238,.45) !important;
-  box-shadow:0 12px 28px rgba(8,145,178,.16) !important;
-}
-#dashboard .menu-item .label,
-#dashboard .menu-item span{color:var(--theme-text) !important;}
-
-#dashboard .user-badge{
-  color:var(--theme-text) !important;
-  background:linear-gradient(110deg,rgba(8,145,178,.24),rgba(13,148,136,.16)) !important;
-  border-color:rgba(34,211,238,.45) !important;
-  box-shadow:0 10px 30px rgba(8,145,178,.14),inset 0 1px 0 rgba(255,255,255,.07) !important;
-}
-
-#dashboard .title,
-#dashboard h1,#dashboard h2,#dashboard h3{
-  color:#e9fdff !important;
-  text-shadow:0 2px 18px rgba(34,211,238,.12);
-}
-
-#dashboard .btn-sm,
-#dashboard .btn-success,
-#dashboard .btn-block,
-#dashboard button:not(.btn-close-panel):not(.copy-phone-btn){
-  color:#03191e !important;
-  background:linear-gradient(105deg,#2dd4bf,#22d3ee 55%,#38bdf8) !important;
-  border-color:rgba(255,255,255,.16) !important;
-  box-shadow:0 8px 22px rgba(6,182,212,.20) !important;
-}
-#dashboard button:not(.btn-close-panel):not(.copy-phone-btn):hover{
-  filter:brightness(1.08) saturate(1.08) !important;
-  box-shadow:0 11px 28px rgba(34,211,238,.28) !important;
-}
-
-/* Keep Close clearly red for safe visual recognition */
-#dashboard .btn-close-panel{
-  color:#fff !important;
-  background:linear-gradient(135deg,#fb5265,#c91d39) !important;
-  border-color:rgba(255,255,255,.18) !important;
-}
-
-#dashboard input,
-#dashboard select,
-#dashboard textarea{
-  color:#e9fdff !important;
-  background:linear-gradient(145deg,#061a22,#0a2630) !important;
-  border-color:rgba(103,232,249,.16) !important;
-}
-#dashboard input::placeholder,
-#dashboard textarea::placeholder{color:#6d9aa5 !important;}
-#dashboard input:focus,
-#dashboard select:focus,
-#dashboard textarea:focus{
-  border-color:rgba(34,211,238,.75) !important;
-  box-shadow:0 0 0 3px rgba(34,211,238,.12),0 8px 20px rgba(0,0,0,.16) !important;
-}
-
-/* Results, balance and information sections */
-.smart-calc-hero,
-.calc-note{
-  color:#cceff5 !important;
-  background:linear-gradient(135deg,rgba(6,182,212,.12),rgba(45,212,191,.07)) !important;
-  border-color:rgba(34,211,238,.16) !important;
-}
-.smart-calc-result,
-.game-result{
-  color:var(--theme-text) !important;
-  background:linear-gradient(145deg,#0b2a34,#071e27) !important;
-  border-color:rgba(103,232,249,.14) !important;
-}
-.smart-calc-result .highlight{
-  background:linear-gradient(105deg,rgba(45,212,191,.18),rgba(34,211,238,.14)) !important;
-}
-
-/* Payment/card/amount selections */
-#dashboard .amount-btn,
-#dashboard .payment-method,
-#dashboard .card-item{
-  color:#dffbff !important;
-  background:linear-gradient(145deg,#0d2b35,#08212a) !important;
-  border-color:rgba(103,232,249,.14) !important;
-}
-#dashboard .amount-btn.active,
-#dashboard .payment-method.active,
-#dashboard .card-item.active{
-  background:linear-gradient(135deg,rgba(6,182,212,.26),rgba(45,212,191,.18)) !important;
-  border-color:rgba(34,211,238,.65) !important;
-  box-shadow:0 0 0 2px rgba(34,211,238,.08),0 10px 25px rgba(6,182,212,.14) !important;
-}
-
-/* Scrollbars */
-*{scrollbar-color:#1b6b78 #071a21;}
-::-webkit-scrollbar{width:8px;height:8px;}
-::-webkit-scrollbar-track{background:#071a21;}
-::-webkit-scrollbar-thumb{background:linear-gradient(#22d3ee,#2dd4bf);border-radius:20px;}
-
-
-/* ╔══════════════════════════════════════════════════════════════╗
-   ║ NEON GAMING LUXURY THEME — VISUAL ONLY                       ║
-   ║ No functions, calculations, APIs or interactions changed.    ║
-   ╚══════════════════════════════════════════════════════════════╝ */
-:root{
-  --neon-purple:#8b5cf6;
-  --neon-pink:#ec4899;
-  --neon-cyan:#22d3ee;
-  --neon-dark:#080610;
-  --neon-card:#141020;
-  --neon-text:#f8f5ff;
-}
-
-body{
-  color:var(--neon-text) !important;
-  background:
-    radial-gradient(ellipse at 15% 5%,rgba(139,92,246,.28),transparent 34%),
-    radial-gradient(ellipse at 92% 22%,rgba(236,72,153,.20),transparent 30%),
-    radial-gradient(ellipse at 48% 100%,rgba(34,211,238,.12),transparent 38%),
-    linear-gradient(145deg,#05030a,#0b0712 48%,#05030a) !important;
-}
-
-#dashboard{
-  position:relative;
-  background:
-    linear-gradient(145deg,rgba(12,8,22,.96),rgba(7,5,14,.98)) !important;
-}
-#dashboard::before{
-  content:"";position:absolute;inset:0;pointer-events:none;opacity:.32;
-  background-image:
-    linear-gradient(rgba(139,92,246,.06) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(139,92,246,.06) 1px,transparent 1px);
-  background-size:28px 28px;
-}
-
-#dashboard .dynamic-card,
-#dashboard .card,
-.smart-calc-shell{
-  position:relative;
-  color:var(--neon-text) !important;
-  background:linear-gradient(145deg,rgba(26,19,42,.94),rgba(10,7,19,.97)) !important;
-  border:1px solid rgba(192,132,252,.24) !important;
-  box-shadow:
-    0 22px 55px rgba(0,0,0,.45),
-    0 0 28px rgba(139,92,246,.07),
-    inset 0 1px 0 rgba(255,255,255,.06) !important;
-}
-
-#dashboard .menu-item{
-  position:relative;overflow:hidden;
-  color:#fff !important;
-  background:linear-gradient(145deg,rgba(31,22,51,.96),rgba(13,9,25,.98)) !important;
-  border:1px solid rgba(192,132,252,.17) !important;
-  box-shadow:0 12px 28px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.045) !important;
-}
-#dashboard .menu-item::before{
-  content:"";position:absolute;inset:-2px;pointer-events:none;opacity:0;
-  background:linear-gradient(120deg,rgba(139,92,246,.25),rgba(236,72,153,.18),rgba(34,211,238,.16));
-  transition:opacity .25s ease;
-}
-#dashboard .menu-item:hover{
-  transform:translateY(-3px) scale(1.015) !important;
-  border-color:rgba(236,72,153,.55) !important;
-  box-shadow:0 16px 34px rgba(0,0,0,.32),0 0 22px rgba(139,92,246,.14) !important;
-}
-#dashboard .menu-item:hover::before{opacity:1}
-
-#dashboard .user-badge{
-  color:#fff !important;
-  background:linear-gradient(105deg,rgba(124,58,237,.34),rgba(236,72,153,.20),rgba(34,211,238,.13)) !important;
-  border:1px solid rgba(192,132,252,.58) !important;
-  box-shadow:0 12px 34px rgba(124,58,237,.22),0 0 22px rgba(236,72,153,.08),inset 0 1px 0 rgba(255,255,255,.08) !important;
-}
-
-#dashboard .title,
-#dashboard h1,#dashboard h2,#dashboard h3{
-  color:#fff !important;
-  text-shadow:0 0 18px rgba(192,132,252,.25);
-}
-
-/* Strong signature gaming gradient for action buttons */
-#dashboard .btn-sm,
-#dashboard .btn-success,
-#dashboard .btn-block,
-#dashboard button:not(.btn-close-panel):not(.copy-phone-btn){
-  color:#fff !important;
-  background:linear-gradient(105deg,#7c3aed 0%,#a855f7 35%,#ec4899 70%,#f472b6 100%) !important;
-  border:1px solid rgba(255,255,255,.18) !important;
-  box-shadow:0 9px 24px rgba(168,85,247,.26),0 0 16px rgba(236,72,153,.10) !important;
-}
-#dashboard button:not(.btn-close-panel):not(.copy-phone-btn):hover{
-  filter:brightness(1.12) saturate(1.16) !important;
-  box-shadow:0 13px 30px rgba(168,85,247,.38),0 0 22px rgba(236,72,153,.16) !important;
-}
-
-#dashboard .btn-close-panel{
-  color:#fff !important;
-  background:linear-gradient(135deg,#ff3d64,#d4143d) !important;
-  border:1px solid rgba(255,255,255,.22) !important;
-  box-shadow:0 8px 24px rgba(225,29,72,.32) !important;
-}
-
-#dashboard input,
-#dashboard select,
-#dashboard textarea{
-  color:#fff !important;
-  background:linear-gradient(145deg,#0d0918,#151025) !important;
-  border:1px solid rgba(192,132,252,.20) !important;
-}
-#dashboard input::placeholder,#dashboard textarea::placeholder{color:#8f819f !important;}
-#dashboard input:focus,#dashboard select:focus,#dashboard textarea:focus{
-  border-color:rgba(236,72,153,.72) !important;
-  box-shadow:0 0 0 3px rgba(236,72,153,.12),0 0 22px rgba(139,92,246,.10) !important;
-}
-
-/* Premium result panels */
-.smart-calc-hero,.calc-note{
-  color:#f3e8ff !important;
-  background:linear-gradient(120deg,rgba(124,58,237,.16),rgba(236,72,153,.10),rgba(34,211,238,.07)) !important;
-  border:1px solid rgba(192,132,252,.18) !important;
-}
-.smart-calc-result,.game-result{
-  color:#fff !important;
-  background:linear-gradient(145deg,#171027,#0d0918) !important;
-  border:1px solid rgba(192,132,252,.16) !important;
-}
-.smart-calc-result .highlight{
-  background:linear-gradient(105deg,rgba(139,92,246,.25),rgba(236,72,153,.18),rgba(34,211,238,.12)) !important;
-}
-
-/* Amount, payment and bank cards */
-#dashboard .amount-btn,#dashboard .payment-method,#dashboard .card-item{
-  color:#f8f5ff !important;
-  background:linear-gradient(145deg,#1b132c,#0d0918) !important;
-  border-color:rgba(192,132,252,.18) !important;
-}
-#dashboard .amount-btn.active,#dashboard .payment-method.active,#dashboard .card-item.active{
-  color:#fff !important;
-  background:linear-gradient(125deg,rgba(124,58,237,.38),rgba(236,72,153,.25)) !important;
-  border-color:rgba(236,72,153,.68) !important;
-  box-shadow:0 0 0 2px rgba(236,72,153,.08),0 0 25px rgba(139,92,246,.16) !important;
-}
-
-/* Neon scrollbar */
-*{scrollbar-color:#a855f7 #090611;}
-::-webkit-scrollbar{width:8px;height:8px;}
-::-webkit-scrollbar-track{background:#090611;}
-::-webkit-scrollbar-thumb{background:linear-gradient(#8b5cf6,#ec4899);border-radius:20px;}
-
-</style>
+  </style>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
 <body>
@@ -2069,7 +1777,7 @@ body{
             <span class="icon">🎲</span>
             <div>
               <div class="title">LIMBO</div>
-              <div class="desc">Open Limbo Game</div>
+              <div class="desc">2X INSTANT</div>
             </div>
             <button class="dashboard-action-btn">PLAY NOW &nbsp; ▶</button>
           </div>
@@ -3438,72 +3146,85 @@ body{
       <div style="display:flex;flex-direction:column;gap:8px;">
         <button class="btn-sm btn-success btn-block" id="launchFanTan">🎯 Fan Tan</button>
         <button class="btn-sm btn-warning btn-block" id="launchChicken">🐔 Chicken Road 2</button>
-        <button class="btn-sm btn-block" id="saveFanTanName" style="display:none;">👤 SAVE FAN TAN NAME</button>
       </div>
-      <div id="gameResult" class="mt-10"></div>
-      <div id="screenNameResult" class="mt-10"></div>
-      <div id="fanTanEmbed" style="display:none;margin-top:12px;border:1px solid rgba(192,132,252,.35);border-radius:14px;overflow:hidden;background:#080610;">
-        <div style="padding:8px 12px;font-size:12px;opacity:.75;">🎯 Fan Tan Game</div>
-        <iframe id="fanTanFrame" title="Fan Tan Game" style="width:100%;height:620px;border:0;display:block;background:#080610;" allow="fullscreen; autoplay"></iframe>
-      </div></div>`);
+      <div id="gameResult" class="mt-10"></div></div>`);
+
+    function closeFanTanGame(){
+      const shell=document.getElementById('fanTanGameShell');
+      if(!shell) return;
+      const frame=document.getElementById('fanTanGameFrame');
+      if(frame) frame.src='about:blank';
+      shell.remove();
+      document.getElementById('gameResult').innerHTML='<div class="game-result"><span class="ok">← Returned to the dashboard.</span></div>';
+    }
+
+    function openFanTanEmbedded(url){
+      const result=document.getElementById('gameResult');
+      const old=document.getElementById('fanTanGameShell');
+      if(old) old.remove();
+
+      const shell=document.createElement('div');
+      shell.id='fanTanGameShell';
+      shell.className='fan-tan-game-shell';
+      shell.innerHTML=`
+        <div class="fan-tan-game-bar">
+          <div class="fan-tan-game-title">🎯 Fan Tan</div>
+          <button type="button" class="fan-tan-game-close" id="closeFanTanGame">✕ Close Game</button>
+        </div>
+        <div class="fan-tan-game-loading">⏳ Loading Fan Tan...</div>
+        <iframe id="fanTanGameFrame" class="fan-tan-game-frame"
+          title="Fan Tan Game"
+          allow="fullscreen; autoplay"
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+
+      result.innerHTML='';
+      result.appendChild(shell);
+
+      const frame=document.getElementById('fanTanGameFrame');
+      document.getElementById('closeFanTanGame').addEventListener('click',closeFanTanGame);
+      frame.addEventListener('load',()=>shell.classList.add('is-loaded'),{once:true});
+      frame.src=url;
+    }
+
     document.getElementById('launchFanTan').addEventListener('click',async ()=>{
       try{
-        const r=await fetch('https://ltapi.game712.com/iGaming/common/getGameStart?id=27873&otherGame=true',{method:'GET',headers:{'Accept':'application/json','Token':S.token,'Visitor':S.visitor,'Origin':'https://playbhau.com','Referer':'https://playbhau.com/','PackageId':'2'}});
-        const d=await r.json();
-        if(d.code===0 && d.success){ let url=d.data?.gameUrl||''; if(url){
-          url=decodeURIComponent(url.replace(/\\/g,''));
-          // Pass the preferred screen name with the Fan Tan launch URL.
-          // Existing launch, login and game functionality remain unchanged.
-          const launchUrl=new URL(url);
-          launchUrl.searchParams.set('screenName','Sanju');
-          launchUrl.searchParams.set('playerName','Sanju');
-
-          window._fanTanLaunchUrl=launchUrl.toString();
-          const fanTanFrame=document.getElementById('fanTanFrame');
-          const fanTanEmbed=document.getElementById('fanTanEmbed');
-          fanTanFrame.src=window._fanTanLaunchUrl;
-          fanTanEmbed.style.display='block';
-          document.getElementById('gameResult').innerHTML='<div class="game-result"><span class="ok">✅ Fan Tan dashboard-এর ভিতরেই open হয়েছে! এখন নাম Save করতে নিচের button click করুন।</span></div>';
-          document.getElementById('saveFanTanName').style.display='block';
-        } }
-      }catch(_){}
-    });
-    document.getElementById('saveFanTanName').addEventListener('click',async ()=>{
-      const btn=document.getElementById('saveFanTanName');
-      const result=document.getElementById('screenNameResult');
-
-      btn.disabled=true;
-      btn.textContent='⏳ SAVING & OPENING FAN TAN...';
-      result.innerHTML='<div class="game-result"><span class="ok">⏳ নাম Save request পাঠানো হচ্ছে, তারপর Fan Tan আবার open হবে...</span></div>';
-
-      try{
-        await fetch('https://skylinedja.evo-games.com/api/player/screenName?client_version=6.20260828.73028.64715-5d3a735b0e-r2',{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          credentials:'include',
-          body:JSON.stringify({screenName:'Sanju'})
+        // Preserve the existing authorized game-launch request and session headers.
+        const r=await fetch('https://ltapi.game712.com/iGaming/common/getGameStart?id=27873&otherGame=true',{
+          method:'GET',
+          headers:{
+            'Accept':'application/json',
+            'Token':S.token,
+            'Visitor':S.visitor,
+            'Origin':'https://playbhau.com',
+            'Referer':'https://playbhau.com/',
+            'PackageId':'2'
+          }
         });
-      }catch(e){
-        console.warn('Screen-name request could not be completed from the dashboard.',e);
-      }finally{
-        // Always return to the same Fan Tan launch page after the button click.
-        if(window._fanTanLaunchUrl){
-          const fanTanFrame=document.getElementById('fanTanFrame');
-          if(fanTanFrame) fanTanFrame.src=window._fanTanLaunchUrl;
+        const d=await r.json();
+        if(d.code===0 && d.success){
+          let url=d.data?.gameUrl||'';
+          if(url){
+            url=decodeURIComponent(url.replace(/\/g,''));
+            openFanTanEmbedded(url);
+          }else{
+            document.getElementById('gameResult').innerHTML='<div class="game-result">⚠️ No Fan Tan launch URL was returned.</div>';
+          }
+        }else{
+          document.getElementById('gameResult').innerHTML='<div class="game-result">⚠️ Fan Tan could not be launched.</div>';
         }
-        btn.disabled=false;
-        btn.textContent='👤 SAVE FAN TAN NAME';
+      }catch(_){
+        document.getElementById('gameResult').innerHTML='<div class="game-result">⚠️ Unable to load Fan Tan. Please try again.</div>';
       }
     });
 
+    // Existing Chicken Road behavior is intentionally left unchanged.
     document.getElementById('launchChicken').addEventListener('click',async ()=>{
       try{
         const r=await fetch('https://ltapi.game712.com/iGaming/common/getGameStart?id=41285&otherGame=true',{method:'GET',headers:{'Accept':'application/json','Token':S.token,'Visitor':S.visitor,'Origin':'https://playbhau.com','Referer':'https://playbhau.com/','PackageId':'2'}});
         const d=await r.json();
-        if(d.code===0 && d.success){ let url=d.data?.gameUrl||''; if(url){ url=decodeURIComponent(url.replace(/\\/g,'')); window.open(url,'_blank'); document.getElementById('gameResult').innerHTML='<div class="game-result"><span class="ok">✅ Chicken Road 2 launched!</span></div>'; } }
+        if(d.code===0 && d.success){ let url=d.data?.gameUrl||''; if(url){ url=decodeURIComponent(url.replace(/\/g,'')); window.open(url,'_blank'); document.getElementById('gameResult').innerHTML='<div class="game-result"><span class="ok">✅ Chicken Road 2 launched!</span></div>'; } }
       }catch(_){}
     });
-
   }
 
 
