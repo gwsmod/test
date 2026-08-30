@@ -2584,9 +2584,9 @@ select:focus{
       }
     }catch(_){}
 
-    // Referral-aware recharge rule:
-    // - referral available -> prefer/select ₹200
-    // - no referral available -> use ₹300 and do not show ₹200
+    // Keep the quick amount buttons limited to ₹200 and ₹300 only.
+    // The Enter Amount field remains available for a manual amount.
+    // Referral status is used only to choose the default amount.
     let referralAvailable=false;
     try{
       const referrals = Array.isArray(S.referralHistoryCache)
@@ -2597,10 +2597,10 @@ select:focus{
 
     S.depositAmounts = S.depositAmounts.filter(item=>{
       const amt=parseFloat(item.balance);
-      return referralAvailable ? amt===200 : amt===300;
+      return amt===200 || amt===300;
     });
 
-    // Select the correct amount automatically.
+    // Referral-aware default: ₹200 with referral, otherwise ₹300.
     const preferredAmount = referralAvailable ? 200 : 300;
     const preferredItem = S.depositAmounts.find(item=>parseFloat(item.balance)===preferredAmount);
     S.selectedAmount = preferredItem ? preferredAmount : (S.depositAmounts[0] ? parseFloat(S.depositAmounts[0].balance) : null);
@@ -2706,13 +2706,17 @@ select:focus{
       }
       if(action) action.style.display='';
 
-      // After returning, show every server-provided recharge amount.
+      // Keep the quick amount buttons limited to ₹200 and ₹300 after returning too.
+      // The manual Enter Amount field can still be used for other valid amounts.
       const grid=document.getElementById('amountGrid');
       if(grid && Array.isArray(S.depositAllAmounts) && S.depositAllAmounts.length){
-        grid.innerHTML='';
-        S.depositAllAmounts.forEach(item=>{
+        const quickAmounts=S.depositAllAmounts.filter(item=>{
           const amt=parseFloat(item.balance);
-          if(!Number.isFinite(amt)) return;
+          return amt===200 || amt===300;
+        });
+        grid.innerHTML='';
+        quickAmounts.forEach(item=>{
+          const amt=parseFloat(item.balance);
           const b=document.createElement('button');
           b.type='button';
           b.className='amount-btn'+(amt===S.selectedAmount?' active':'');
