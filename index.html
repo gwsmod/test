@@ -3186,19 +3186,27 @@ select:focus{
   function renderGames(){
     S.currentPanel='games';
     showPanel(`<div class="dynamic-card"><div class="title">🎮 Launch Games <button class="btn-close-panel" onclick="window._closePanel()">✕ Close</button></div>
-      <div style="display:flex;flex-direction:column;gap:8px;">
+      <div id="gameLaunchOptions" style="display:flex;flex-direction:column;gap:8px;">
         <button class="btn-sm btn-success btn-block" id="launchFanTan">🎯 Fan Tan</button>
         <button class="btn-sm btn-warning btn-block" id="launchChicken">🐔 Chicken Road 2</button>
       </div>
       <div id="gameResult" class="mt-10"></div></div>`);
+    // Keep the game launcher and the embedded game mutually exclusive.
+    // The main panel Close button still closes the entire Games panel and returns
+    // to the dashboard; Close Game only returns to the game selection screen.
+    function setGameLauncherVisible(visible){
+      const options=document.getElementById('gameLaunchOptions');
+      if(options) options.style.display=visible ? 'flex' : 'none';
+    }
+
     function closeFanTanGame(){
       const shell=document.getElementById('fanTanGameShell');
-      if(!shell) return;
       const frame=document.getElementById('fanTanGameFrame');
       if(frame) frame.src='about:blank';
-      shell.remove();
+      if(shell) shell.remove();
+      setGameLauncherVisible(true);
       const result=document.getElementById('gameResult');
-      if(result) result.innerHTML='<div class="game-result"><span class="ok">← Returned to the dashboard.</span></div>';
+      if(result) result.innerHTML='<div class="game-result"><span class="ok">🎮 Choose another game.</span></div>';
     }
 
     function openFanTanEmbedded(url){
@@ -3206,6 +3214,9 @@ select:focus{
       if(!result) return;
       const old=document.getElementById('fanTanGameShell');
       if(old){ const oldFrame=old.querySelector('iframe'); if(oldFrame) oldFrame.src='about:blank'; old.remove(); }
+      const other=document.getElementById('chickenGameShell');
+      if(other){ const otherFrame=other.querySelector('iframe'); if(otherFrame) otherFrame.src='about:blank'; other.remove(); }
+      setGameLauncherVisible(false);
       const shell=document.createElement('div');
       shell.id='fanTanGameShell';
       shell.className='fan-tan-game-shell';
@@ -3240,12 +3251,12 @@ select:focus{
     });
     function closeChickenGame(){
       const shell=document.getElementById('chickenGameShell');
-      if(!shell) return;
       const frame=document.getElementById('chickenGameFrame');
       if(frame) frame.src='about:blank';
-      shell.remove();
+      if(shell) shell.remove();
+      setGameLauncherVisible(true);
       const result=document.getElementById('gameResult');
-      if(result) result.innerHTML='<div class="game-result"><span class="ok">← Returned to the dashboard.</span></div>';
+      if(result) result.innerHTML='<div class="game-result"><span class="ok">🎮 Choose another game.</span></div>';
     }
 
     function openChickenEmbedded(url){
@@ -3253,6 +3264,9 @@ select:focus{
       if(!result) return;
       const old=document.getElementById('chickenGameShell');
       if(old){ const oldFrame=old.querySelector('iframe'); if(oldFrame) oldFrame.src='about:blank'; old.remove(); }
+      const other=document.getElementById('fanTanGameShell');
+      if(other){ const otherFrame=other.querySelector('iframe'); if(otherFrame) otherFrame.src='about:blank'; other.remove(); }
+      setGameLauncherVisible(false);
       const shell=document.createElement('div');
       shell.id='chickenGameShell';
       shell.className='fan-tan-game-shell';
