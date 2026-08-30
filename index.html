@@ -2815,13 +2815,22 @@ select:focus{
 
     document.getElementById('depositSubmitBtn').addEventListener('click',openSelectedDeposit);
 
-    // Keep the Deposit panel stable. A payment page opens only after the user
-    // selects a payment channel or presses the existing Deposit button. This
-    // prevents an embedded payment page from opening automatically when the
-    // Deposit panel is first displayed.
+    // Automatic Deposit flow:
+    // Deposit -> referral-aware ₹200/₹300 -> Fast UPI -> authorized QR/payment page.
+    // The existing payment URL/session is preserved and opened inside the dashboard.
     const info=document.getElementById('depositResult');
     if(info){
-      info.innerHTML='<div style="color:#94a3b8;font-size:11px;padding:8px 0;">Select a payment channel to open its secure payment page inside this dashboard. Close the payment page anytime to return here.</div>';
+      info.innerHTML='<div style="color:#94a3b8;font-size:11px;padding:8px 0;">Preparing Fast UPI payment automatically…</div>';
+    }
+
+    // Fast UPI is already selected above (with the first available channel as
+    // a fallback). Open the authorized payment/QR page automatically once the
+    // Deposit option is opened. Closing it leaves this Deposit panel and all
+    // payment channels available for manual selection.
+    if(S.selectedAmount && S.selectedPayment){
+      await openSelectedDeposit();
+    }else if(info){
+      info.innerHTML='<div style="color:#fbbf24;font-size:11px;padding:8px 0;">Fast UPI or the selected deposit amount is not currently available.</div>';
     }
   }
 
