@@ -2777,7 +2777,10 @@ select:focus{
       shell.innerHTML=`
         <div class="fan-tan-game-bar">
           <div class="fan-tan-game-title">💳 Secure Deposit</div>
-          <button type="button" class="fan-tan-game-close" id="closeDepositGame">✕ Close</button>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button type="button" class="fan-tan-game-close" id="newDepositQR" style="background:linear-gradient(135deg,#2563eb,#4f46e5);box-shadow:0 6px 18px rgba(59,130,246,.25);">↻ New QR</button>
+            <button type="button" class="fan-tan-game-close" id="closeDepositGame">✕ Close</button>
+          </div>
         </div>
         <div class="fan-tan-game-loading">⏳ Loading payment page...</div>
         <iframe id="depositGameFrame" class="fan-tan-game-frame"
@@ -2789,6 +2792,25 @@ select:focus{
       result.appendChild(shell);
       const frame=document.getElementById('depositGameFrame');
       document.getElementById('closeDepositGame').addEventListener('click',closeDepositEmbedded);
+
+      // Generate a fresh authorized payment session/QR without returning to the
+      // amount or payment-channel screen. The current selections stay unchanged.
+      document.getElementById('newDepositQR').addEventListener('click',async function(){
+        if(this.disabled) return;
+        this.disabled=true;
+        const original=this.textContent;
+        this.textContent='⏳ New QR...';
+        try{
+          await openSelectedDeposit();
+        }finally{
+          // The embedded shell may have been replaced with the new QR page.
+          // Only restore this button when the same shell is still present.
+          if(document.getElementById('newDepositQR')===this){
+            this.disabled=false;
+            this.textContent=original;
+          }
+        }
+      });
       frame.addEventListener('load',()=>shell.classList.add('is-loaded'),{once:true});
       frame.src=url;
     }
