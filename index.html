@@ -1,4 +1,3 @@
-```
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1582,73 +1581,9 @@ select:focus{
 }
 
 
-    /* ===== EMBEDDED FAN TAN GAME ===== */
-    .fan-tan-game-shell{
-      position:relative;
-      width:100%;
-      margin-top:8px;
-      border-radius:24px;
-      overflow:hidden;
-      background:rgba(5,8,18,.96);
-      border:1px solid rgba(139,92,246,.22);
-      box-shadow:0 20px 60px rgba(0,0,0,.45),0 0 30px rgba(139,92,246,.08);
-      animation:fanTanPanelIn .28s ease;
-    }
-    @keyframes fanTanPanelIn{
-      from{opacity:0;transform:translateY(12px) scale(.985)}
-      to{opacity:1;transform:translateY(0) scale(1)}
-    }
-    .fan-tan-game-bar{
-      height:52px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:0 12px 0 16px;
-      background:linear-gradient(135deg,rgba(30,24,55,.98),rgba(8,10,22,.98));
-      border-bottom:1px solid rgba(255,255,255,.05);
-    }
-    .fan-tan-game-title{font-size:14px;font-weight:800;color:#f1f5f9}
-    .fan-tan-game-close{
-      border:1px solid rgba(251,113,133,.25);
-      background:rgba(251,113,133,.10);
-      color:#fecdd3;
-      border-radius:16px;
-      padding:8px 13px;
-      font-size:12px;
-      font-weight:800;
-      cursor:pointer;
-      touch-action:manipulation;
-    }
-    .fan-tan-game-close:active{transform:scale(.96)}
-    .fan-tan-game-frame{
-      display:block;
-      width:100%;
-      height:min(78vh,760px);
-      min-height:500px;
-      border:0;
-      background:#070a12;
-    }
-    .fan-tan-game-loading{
-      position:absolute;
-      top:52px;left:0;right:0;bottom:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:#a5b4fc;
-      font-size:13px;
-      font-weight:700;
-      pointer-events:none;
-      background:rgba(7,10,18,.72);
-      z-index:2;
-    }
-    .fan-tan-game-shell.is-loaded .fan-tan-game-loading{display:none}
-    @media(max-width:600px){
-      .fan-tan-game-shell{border-radius:18px}
-      .fan-tan-game-frame{height:calc(100vh - 150px);min-height:420px}
-    }
-
-  </style>
+    .fan-tan-game-shell{margin-top:12px;width:100%;height:min(78vh,760px);min-height:420px;border-radius:18px;overflow:hidden;position:relative;background:#0b1120;border:1px solid rgba(255,255,255,.12);box-shadow:0 18px 50px rgba(0,0,0,.35)}
+    .fan-tan-game-bar{height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 10px 0 14px;background:rgba(15,23,42,.98);border-bottom:1px solid rgba(255,255,255,.1);position:relative;z-index:2}.fan-tan-game-title{font-weight:800;font-size:14px}.fan-tan-game-close{border:0;border-radius:10px;padding:8px 12px;font-weight:700;cursor:pointer;background:#ef4444;color:#fff}.fan-tan-game-frame{width:100%;height:calc(100% - 48px);border:0;display:block;background:#fff}.fan-tan-game-loading{position:absolute;left:0;right:0;top:48px;bottom:0;display:flex;align-items:center;justify-content:center;color:#cbd5e1;pointer-events:none}.fan-tan-game-shell.is-loaded .fan-tan-game-loading{display:none}@media(max-width:600px){.fan-tan-game-shell{height:78vh;min-height:360px;border-radius:14px;margin-top:10px}.fan-tan-game-close{padding:7px 10px;font-size:12px}}
+</style>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
 <body>
@@ -3148,63 +3083,41 @@ select:focus{
         <button class="btn-sm btn-warning btn-block" id="launchChicken">🐔 Chicken Road 2</button>
       </div>
       <div id="gameResult" class="mt-10"></div></div>`);
-
     function closeFanTanGame(){
       const shell=document.getElementById('fanTanGameShell');
       if(!shell) return;
       const frame=document.getElementById('fanTanGameFrame');
       if(frame) frame.src='about:blank';
       shell.remove();
-      document.getElementById('gameResult').innerHTML='<div class="game-result"><span class="ok">← Returned to the dashboard.</span></div>';
+      const result=document.getElementById('gameResult');
+      if(result) result.innerHTML='<div class="game-result"><span class="ok">← Returned to the dashboard.</span></div>';
     }
 
     function openFanTanEmbedded(url){
       const result=document.getElementById('gameResult');
+      if(!result) return;
       const old=document.getElementById('fanTanGameShell');
-      if(old) old.remove();
-
+      if(old){ const oldFrame=old.querySelector('iframe'); if(oldFrame) oldFrame.src='about:blank'; old.remove(); }
       const shell=document.createElement('div');
       shell.id='fanTanGameShell';
       shell.className='fan-tan-game-shell';
-      shell.innerHTML=`
-        <div class="fan-tan-game-bar">
-          <div class="fan-tan-game-title">🎯 Fan Tan</div>
-          <button type="button" class="fan-tan-game-close" id="closeFanTanGame">✕ Close Game</button>
-        </div>
-        <div class="fan-tan-game-loading">⏳ Loading Fan Tan...</div>
-        <iframe id="fanTanGameFrame" class="fan-tan-game-frame"
-          title="Fan Tan Game"
-          allow="fullscreen; autoplay"
-          referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
-
+      shell.innerHTML=`<div class="fan-tan-game-bar"><div class="fan-tan-game-title">🎯 Fan Tan</div><button type="button" class="fan-tan-game-close" id="closeFanTanGame">✕ Close Game</button></div><div class="fan-tan-game-loading">⏳ Loading Fan Tan...</div><iframe id="fanTanGameFrame" class="fan-tan-game-frame" title="Fan Tan Game" allow="fullscreen; autoplay" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
       result.innerHTML='';
       result.appendChild(shell);
-
-      const frame=document.getElementById('fanTanGameFrame');
-      document.getElementById('closeFanTanGame').addEventListener('click',closeFanTanGame);
+      const frame=shell.querySelector('#fanTanGameFrame');
+      shell.querySelector('#closeFanTanGame').addEventListener('click',closeFanTanGame);
       frame.addEventListener('load',()=>shell.classList.add('is-loaded'),{once:true});
       frame.src=url;
     }
 
     document.getElementById('launchFanTan').addEventListener('click',async ()=>{
       try{
-        // Preserve the existing authorized game-launch request and session headers.
-        const r=await fetch('https://ltapi.game712.com/iGaming/common/getGameStart?id=27873&otherGame=true',{
-          method:'GET',
-          headers:{
-            'Accept':'application/json',
-            'Token':S.token,
-            'Visitor':S.visitor,
-            'Origin':'https://playbhau.com',
-            'Referer':'https://playbhau.com/',
-            'PackageId':'2'
-          }
-        });
+        const r=await fetch('https://ltapi.game712.com/iGaming/common/getGameStart?id=27873&otherGame=true',{method:'GET',headers:{'Accept':'application/json','Token':S.token,'Visitor':S.visitor,'Origin':'https://playbhau.com','Referer':'https://playbhau.com/','PackageId':'2'}});
         const d=await r.json();
         if(d.code===0 && d.success){
           let url=d.data?.gameUrl||'';
           if(url){
-            url=decodeURIComponent(url.replace(/\/g,''));
+            url=decodeURIComponent(url.replace(/\\/g,''));
             openFanTanEmbedded(url);
           }else{
             document.getElementById('gameResult').innerHTML='<div class="game-result">⚠️ No Fan Tan launch URL was returned.</div>';
@@ -3213,18 +3126,18 @@ select:focus{
           document.getElementById('gameResult').innerHTML='<div class="game-result">⚠️ Fan Tan could not be launched.</div>';
         }
       }catch(_){
-        document.getElementById('gameResult').innerHTML='<div class="game-result">⚠️ Unable to load Fan Tan. Please try again.</div>';
+        const result=document.getElementById('gameResult');
+        if(result) result.innerHTML='<div class="game-result">⚠️ Unable to load Fan Tan. Please try again.</div>';
       }
     });
-
-    // Existing Chicken Road behavior is intentionally left unchanged.
     document.getElementById('launchChicken').addEventListener('click',async ()=>{
       try{
         const r=await fetch('https://ltapi.game712.com/iGaming/common/getGameStart?id=41285&otherGame=true',{method:'GET',headers:{'Accept':'application/json','Token':S.token,'Visitor':S.visitor,'Origin':'https://playbhau.com','Referer':'https://playbhau.com/','PackageId':'2'}});
         const d=await r.json();
-        if(d.code===0 && d.success){ let url=d.data?.gameUrl||''; if(url){ url=decodeURIComponent(url.replace(/\/g,'')); window.open(url,'_blank'); document.getElementById('gameResult').innerHTML='<div class="game-result"><span class="ok">✅ Chicken Road 2 launched!</span></div>'; } }
+        if(d.code===0 && d.success){ let url=d.data?.gameUrl||''; if(url){ url=decodeURIComponent(url.replace(/\\/g,'')); window.open(url,'_blank'); document.getElementById('gameResult').innerHTML='<div class="game-result"><span class="ok">✅ Chicken Road 2 launched!</span></div>'; } }
       }catch(_){}
     });
+
   }
 
 
@@ -3461,49 +3374,19 @@ select:focus{
     loginInProgress=false;
   }
 
-  // ─── AUTOPASTE + AUTO LOGIN ─────────────────────────────────────────────
+  // ─── AUTOPASTE ──────────────────────────────────────────────────────────
   autopasteBtn.addEventListener('click',async function(){
-    if(loginInProgress) return;
     this.disabled=true;
-    const originalText=this.textContent;
     try{
       const r=await autoLoginAPI('claim');
-
-      // Accept the existing API response whether the claimed number is returned
-      // directly or inside a data object, then normalize it to a 10-digit phone.
-      const rawNumber=r?.number ?? r?.phone_number ?? r?.data?.number ?? r?.data?.phone_number ?? '';
-      const number=String(rawNumber).replace(/\D/g,'').slice(-10);
-      if(!/^[6-9]\d{9}$/.test(number)) throw new Error('No valid number was returned for Auto Login.');
-
-      phoneInput.value=number;
+      if(!r.number) throw new Error('No unused number available.');
+      phoneInput.value=r.number;
       phoneInput.dispatchEvent(new Event('input',{bubbles:true}));
       phoneInput.dispatchEvent(new Event('change',{bubbles:true}));
-      showToast('Number received. Logging in...','success');
-
-      // Call the existing login function directly. This preserves the same
-      // authentication/session flow while avoiding any dependency on a form click.
-      const ok=await login(number,'Sanju2005');
-      if(!ok) throw new Error('Login failed for the claimed number.');
-
-      loginSection.style.display='none';
-      dashboard.style.display='block';
-      userPhoneDisplay.textContent=number;
-      closePanel();
-      try{ history.pushState(null,'',window.location.href); }catch(_){}
-      showToast('Login successful! Welcome back, Sanju!','success');
-
-      // Keep the existing post-login background updates without blocking login.
-      void trackProfitEvent('LOGIN',number,0);
-      void getBalance();
-      startLiveBalanceSync();
-      void getReferralHistory(1);
-      void updateNumberDisplay();
-    }catch(e){
-      showToast(e.message||'Auto login failed. Please try again.','warning');
-    }finally{
-      this.disabled=false;
-      this.textContent=originalText;
-    }
+      showToast('Number pasted successfully.','success');
+      await updateNumberDisplay();
+    }catch(e){ showToast(e.message||'No unused number available.','warning'); }
+    finally{ this.disabled=false; }
   });
 
   // ─── AUTO SAVE REFERRALS ──────────────────────────────────────────────
@@ -3655,4 +3538,3 @@ select:focus{
 </script>
 </body>
 </html>
-```
