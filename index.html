@@ -2566,11 +2566,6 @@ select:focus{
   async function renderDeposit(){
     S.currentPanel='deposit';
 
-    // Reserve the payment tab immediately from the Deposit click.
-    // The selected QR/payment page will be loaded into this tab automatically.
-    let autoDepositWindow=null;
-    try{ autoDepositWindow=window.open('about:blank','_blank'); }catch(_){}
-
     try{
       const r=await fetch('https://api.bh556677ww.com/app/pay/balance/list',{
         method:'POST',
@@ -2699,17 +2694,49 @@ select:focus{
       }
     });
 
+    function closeDepositEmbedded(){
+      const shell=document.getElementById('depositGameShell');
+      if(!shell) return;
+      const frame=document.getElementById('depositGameFrame');
+      if(frame) frame.src='about:blank';
+      shell.remove();
+      const result=document.getElementById('depositResult');
+      if(result) result.innerHTML='<div class="game-result"><span class="ok">← Returned to the deposit dashboard.</span></div>';
+    }
+
+    function openDepositEmbedded(url){
+      const result=document.getElementById('depositResult');
+      if(!result) return;
+      const old=document.getElementById('depositGameShell');
+      if(old) old.remove();
+
+      const shell=document.createElement('div');
+      shell.id='depositGameShell';
+      shell.className='fan-tan-game-shell';
+      shell.innerHTML=`
+        <div class="fan-tan-game-bar">
+          <div class="fan-tan-game-title">💳 Secure Deposit</div>
+          <button type="button" class="fan-tan-game-close" id="closeDepositGame">✕ Close</button>
+        </div>
+        <div class="fan-tan-game-loading">⏳ Loading payment page...</div>
+        <iframe id="depositGameFrame" class="fan-tan-game-frame"
+          title="Secure Deposit"
+          allow="payment; fullscreen; autoplay"
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+
+      result.innerHTML='';
+      result.appendChild(shell);
+      const frame=document.getElementById('depositGameFrame');
+      document.getElementById('closeDepositGame').addEventListener('click',closeDepositEmbedded);
+      frame.addEventListener('load',()=>shell.classList.add('is-loaded'),{once:true});
+      frame.src=url;
+    }
+
     async function openSelectedDeposit(targetWindow=null){
       if(!S.selectedAmount){ showToast('Please select or enter an amount.','warning'); return; }
       if(!S.selectedPayment){ showToast('Please select a payment channel.','warning'); return; }
 
       const depositBeforeBalance = await getBalance();
-      // Use the tab reserved when Deposit was clicked. For manual channel
-      // selection, create a new tab from that click if needed.
-      let depositWindow=targetWindow;
-      if(!depositWindow){
-        try{ depositWindow=window.open('about:blank','_blank'); }catch(_){}
-      }
 
       let balanceId=null;
 
@@ -2752,41 +2779,12 @@ select:focus{
         if(r.status===200 && d.code===0){
           let url=d.data?d.data.replace(/\\/g,''):'';
           if(url){
-            // Open safely without directly assigning to an unavailable
-            // location object. This avoids the “Cannot set properties of
-            // undefined (setting 'href')” error on some mobile browsers.
-            let opened=false;
-            if(depositWindow && !depositWindow.closed){
-              try{
-                depositWindow.open(url,'_self');
-                opened=true;
-              }catch(_){}
-            }
-            if(!opened){
-              try{
-                const link=document.createElement('a');
-                link.href=url;
-                link.target='_blank';
-                link.rel='noopener';
-                document.body.appendChild(link);
-                link.click();
-                link.remove();
-                opened=true;
-              }catch(_){}
-            }
-            if(!opened){
-              showToast('Payment page could not be opened. Please select the channel again.','error');
-              return;
-            }
-            showToast('Deposit page opened!','success');
+            // Keep the authorized payment URL/session exactly as returned,
+            // but display it inside the current dashboard instead of a new tab.
+            openDepositEmbedded(url);
+            showToast('Deposit page opened inside dashboard!','success');
             if(depositBeforeBalance !== null){
               watchDepositBalance(Number(depositBeforeBalance),Number(S.selectedAmount));
-            }
-            if(div){
-              div.innerHTML=`<div style="background:rgba(0,0,0,.2);padding:10px;border-radius:16px;">
-                <div style="color:#34d399;font-weight:600;">✅ Deposit page opened</div>
-                <div style="font-size:10px;margin-top:4px;color:#6b7280;">Return here to view all available payment channels.</div>
-              </div>`;
             }
           }else{
             showToast('Deposit created, but no payment URL was returned.','warning');
