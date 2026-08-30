@@ -2664,7 +2664,7 @@ select:focus{
     html+=`</div></div>
       <div class="deposit-action-bar">
         <button class="btn-sm btn-deposit btn-block" id="depositSubmitBtn">💳 DEPOSIT NOW &nbsp; ▶</button>
-        <div class="deposit-auto-hint">Select a payment channel to open its deposit page instantly.</div>
+        <div class="deposit-auto-hint">Select a payment channel to open its secure payment page inside this dashboard.</div>
       </div>
       <div id="depositResult" class="mt-10"></div></div></div>`;
     showPanel(html);
@@ -2815,25 +2815,13 @@ select:focus{
 
     document.getElementById('depositSubmitBtn').addEventListener('click',openSelectedDeposit);
 
-    // Automatically choose one of the first three available payment channels
-    // at random and open its QR/payment page for the referral-aware amount.
-    // Use only the first 3 payment channels and automatically switch between
-    // them. This prevents the same channel (for example Fast UPI) being chosen
-    // every time.
-    const autoChannels=payMethods; // payMethods is already restricted to the 3 allowed channels
-    if(S.selectedAmount && autoChannels.length){
-      const chosen=autoChannels.find(m=>Number(m.id)===Number(S.selectedPayment?.id)) || autoChannels[0];
-
-      // Show every available channel in the original Deposit panel. When the
-      // user returns from the QR/payment page, they can see and choose them all.
-      const info=document.getElementById('depositResult');
-      if(info){
-        info.innerHTML='<div style="color:#94a3b8;font-size:11px;padding:8px 0;">Opening a payment channel automatically… All available payment channels remain visible here when you return.</div>';
-      }
-
-      await openSelectedDeposit(autoDepositWindow);
-    }else if(autoDepositWindow && !autoDepositWindow.closed){
-      autoDepositWindow.close();
+    // Keep the Deposit panel stable. A payment page opens only after the user
+    // selects a payment channel or presses the existing Deposit button. This
+    // prevents an embedded payment page from opening automatically when the
+    // Deposit panel is first displayed.
+    const info=document.getElementById('depositResult');
+    if(info){
+      info.innerHTML='<div style="color:#94a3b8;font-size:11px;padding:8px 0;">Select a payment channel to open its secure payment page inside this dashboard. Close the payment page anytime to return here.</div>';
     }
   }
 
