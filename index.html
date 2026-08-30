@@ -2735,6 +2735,20 @@ select:focus{
       }
     }
 
+    // Hide the normal amount/channel controls whenever ANY deposit payment page
+    // is opened (automatic or manual). Keep #depositResult visible because the
+    // secure QR/payment iframe is mounted there.
+    function hideDepositChoices(){
+      const content=document.getElementById('depositContent');
+      const action=document.querySelector('.deposit-action-bar');
+      if(content){
+        Array.from(content.children).forEach(child=>{
+          if(child.id!=='depositResult') child.style.display='none';
+        });
+      }
+      if(action) action.style.display='none';
+    }
+
     function closeDepositEmbedded(){
       const shell=document.getElementById('depositGameShell');
       if(!shell) return;
@@ -2749,6 +2763,11 @@ select:focus{
     function openDepositEmbedded(url){
       const result=document.getElementById('depositResult');
       if(!result) return;
+
+      // This is used for both the first automatic deposit and every manual
+      // amount/channel selection, so the QR/payment page is always shown alone.
+      hideDepositChoices();
+
       const old=document.getElementById('depositGameShell');
       if(old) old.remove();
 
