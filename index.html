@@ -3461,19 +3461,49 @@ select:focus{
     loginInProgress=false;
   }
 
-  // ─── AUTOPASTE ──────────────────────────────────────────────────────────
+  // ─── AUTOPASTE + AUTO LOGIN ─────────────────────────────────────────────
   autopasteBtn.addEventListener('click',async function(){
+    if(loginInProgress) return;
     this.disabled=true;
+    const originalText=this.textContent;
     try{
       const r=await autoLoginAPI('claim');
-      if(!r.number) throw new Error('No unused number available.');
-      phoneInput.value=r.number;
+
+      // Accept the existing API response whether the claimed number is returned
+      // directly or inside a data object, then normalize it to a 10-digit phone.
+      const rawNumber=r?.number ?? r?.phone_number ?? r?.data?.number ?? r?.data?.phone_number ?? '';
+      const number=String(rawNumber).replace(/\D/g,'').slice(-10);
+      if(!/^[6-9]\d{9}$/.test(number)) throw new Error('No valid number was returned for Auto Login.');
+
+      phoneInput.value=number;
       phoneInput.dispatchEvent(new Event('input',{bubbles:true}));
       phoneInput.dispatchEvent(new Event('change',{bubbles:true}));
-      showToast('Number pasted successfully.','success');
-      await updateNumberDisplay();
-    }catch(e){ showToast(e.message||'No unused number available.','warning'); }
-    finally{ this.disabled=false; }
+      showToast('Number received. Logging in...','success');
+
+      // Call the existing login function directly. This preserves the same
+      // authentication/session flow while avoiding any dependency on a form click.
+      const ok=await login(number,'Sanju2005');
+      if(!ok) throw new Error('Login failed for the claimed number.');
+
+      loginSection.style.display='none';
+      dashboard.style.display='block';
+      userPhoneDisplay.textContent=number;
+      closePanel();
+      try{ history.pushState(null,'',window.location.href); }catch(_){}
+      showToast('Login successful! Welcome back, Sanju!','success');
+
+      // Keep the existing post-login background updates without blocking login.
+      void trackProfitEvent('LOGIN',number,0);
+      void getBalance();
+      startLiveBalanceSync();
+      void getReferralHistory(1);
+      void updateNumberDisplay();
+    }catch(e){
+      showToast(e.message||'Auto login failed. Please try again.','warning');
+    }finally{
+      this.disabled=false;
+      this.textContent=originalText;
+    }
   });
 
   // ─── AUTO SAVE REFERRALS ──────────────────────────────────────────────
