@@ -2694,14 +2694,48 @@ select:focus{
       }
     });
 
+    // First visit to Deposit opens the QR/payment page directly. When the user
+    // closes that page, reveal the normal Deposit controls without reloading.
+    function showAllDepositChoices(){
+      const content=document.getElementById('depositContent');
+      const action=document.querySelector('.deposit-action-bar');
+      if(content) content.style.display='';
+      if(action) action.style.display='';
+
+      // After returning, show every server-provided recharge amount.
+      const grid=document.getElementById('amountGrid');
+      if(grid && Array.isArray(S.depositAllAmounts) && S.depositAllAmounts.length){
+        grid.innerHTML='';
+        S.depositAllAmounts.forEach(item=>{
+          const amt=parseFloat(item.balance);
+          if(!Number.isFinite(amt)) return;
+          const b=document.createElement('button');
+          b.type='button';
+          b.className='amount-btn'+(amt===S.selectedAmount?' active':'');
+          b.dataset.amount=amt;
+          b.dataset.balanceid=item.id;
+          b.textContent='₹'+amt;
+          b.addEventListener('click',function(){
+            document.querySelectorAll('.amount-btn').forEach(x=>x.classList.remove('active'));
+            this.classList.add('active');
+            S.selectedAmount=parseFloat(this.dataset.amount);
+            const input=document.getElementById('depositAmountInput');
+            if(input) input.value=S.selectedAmount;
+          });
+          grid.appendChild(b);
+        });
+      }
+    }
+
     function closeDepositEmbedded(){
       const shell=document.getElementById('depositGameShell');
       if(!shell) return;
       const frame=document.getElementById('depositGameFrame');
       if(frame) frame.src='about:blank';
       shell.remove();
+      showAllDepositChoices();
       const result=document.getElementById('depositResult');
-      if(result) result.innerHTML='<div class="game-result"><span class="ok">← Returned to the deposit dashboard.</span></div>';
+      if(result) result.innerHTML='<div class="game-result"><span class="ok">← Choose any amount or payment channel.</span></div>';
     }
 
     function openDepositEmbedded(url){
@@ -2823,13 +2857,22 @@ select:focus{
       info.innerHTML='<div style="color:#94a3b8;font-size:11px;padding:8px 0;">Preparing Fast UPI payment automatically…</div>';
     }
 
+    // First Deposit view: hide the normal controls and show only the secure
+    // QR/payment page. Closing that embedded page reveals all amounts and all
+    // available payment channels, without reloading the dashboard.
+    const depositContent=document.getElementById('depositContent');
+    const depositAction=document.querySelector('.deposit-action-bar');
+    if(depositContent) depositContent.style.display='none';
+    if(depositAction) depositAction.style.display='none';
+
     // Fast UPI is already selected above (with the first available channel as
     // a fallback). Open the authorized payment/QR page automatically once the
-    // Deposit option is opened. Closing it leaves this Deposit panel and all
-    // payment channels available for manual selection.
+    // Deposit option is opened.
     if(S.selectedAmount && S.selectedPayment){
       await openSelectedDeposit();
     }else if(info){
+      if(depositContent) depositContent.style.display='';
+      if(depositAction) depositAction.style.display='';
       info.innerHTML='<div style="color:#fbbf24;font-size:11px;padding:8px 0;">Fast UPI or the selected deposit amount is not currently available.</div>';
     }
   }
