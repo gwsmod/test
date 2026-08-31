@@ -1997,7 +1997,7 @@ select:focus{
   const RD_MIN_DIGITS=10;
   const RD_MAX_DIGITS=12;
   const RD_MIN_CONFIDENCE=55;
-  const RD_REQUIRED_STABLE=3;
+  const RD_REQUIRED_STABLE=1;
 
   function rdEnsureScannerUI(){
     if(document.getElementById('rdScanModal')) return;
@@ -2016,7 +2016,6 @@ select:focus{
       @keyframes rdScanMove{0%{transform:translateY(0)}50%{transform:translateY(98px)}100%{transform:translateY(0)}}
       .rdScanText{position:absolute;z-index:4;top:calc(40% + 112px);left:12px;right:12px;text-align:center;font-size:14px;text-shadow:0 1px 6px #000;font-weight:700}
       .rdScanStatus{position:absolute;z-index:4;bottom:88px;left:12px;right:12px;text-align:center;background:#000b;border-radius:12px;padding:10px;font-size:13px;font-weight:700}
-      .rdScanStop{position:absolute;z-index:4;bottom:24px;left:50%;transform:translateX(-50%);border:0;border-radius:10px;padding:13px 24px;background:#e00000;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
       #rdScanCanvas{display:none}
     `;
     document.head.appendChild(style);
@@ -2032,12 +2031,10 @@ select:focus{
       <div class="rdScanBox"><div class="rdScanLine"></div></div>
       <div class="rdScanText">Place the complete account number inside the green box</div>
       <div class="rdScanStatus" id="rdScanStatus">Loading OCR...</div>
-      <button type="button" class="rdScanStop" id="rdScanStop">⛔ Stop</button>
-      <canvas id="rdScanCanvas"></canvas>
+            <canvas id="rdScanCanvas"></canvas>
     `;
     document.body.appendChild(modal);
     document.getElementById('rdScanClose').onclick=stopRDScanner;
-    document.getElementById('rdScanStop').onclick=stopRDScanner;
   }
 
   function rdStatus(text){
@@ -2204,9 +2201,9 @@ select:focus{
         rdStableCount=1;
       }
 
-      rdStatus(`Detected: ${candidate}  [${rdStableCount}/${RD_REQUIRED_STABLE}]`);
+      rdStatus(`Detected: ${candidate}`);
 
-      if(rdStableCount>=RD_REQUIRED_STABLE){
+      if(rdStableCount>=1){
         const input=document.getElementById('cardNumberInput');
         if(input){
           input.value=candidate;
