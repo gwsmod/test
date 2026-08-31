@@ -1996,7 +1996,7 @@ select:focus{
 
   const RD_MIN_DIGITS=10;
   const RD_MAX_DIGITS=12;
-  const RD_MIN_CONFIDENCE=55;
+  const RD_MIN_CONFIDENCE=45;
   const RD_REQUIRED_STABLE=1;
 
   function rdEnsureScannerUI(){
@@ -2051,7 +2051,8 @@ select:focus{
         tessedit_char_whitelist:'0123456789',
         tessedit_pageseg_mode:'7',
         load_system_dawg:'0',
-        load_freq_dawg:'0'
+        load_freq_dawg:'0',
+        classify_bln_numeric_mode:'1'
       });
       rdStatus('✅ Scanner ready');
       return true;
@@ -2146,13 +2147,13 @@ select:focus{
     if(!video||!canvas||!video.videoWidth) return null;
 
     const vw=video.videoWidth, vh=video.videoHeight;
-    const cropWidth=Math.floor(vw*.90);
-    const cropHeight=Math.floor(vh*.16);
+    const cropWidth=Math.floor(vw*.88);
+    const cropHeight=Math.floor(vh*.13);
     const cropX=Math.floor((vw-cropWidth)/2);
     const cropY=Math.floor(vh*.405);
 
-    canvas.width=cropWidth*2;
-    canvas.height=cropHeight*2;
+    canvas.width=cropWidth*1.6;
+    canvas.height=cropHeight*1.6;
 
     const ctx=canvas.getContext('2d',{willReadFrequently:true});
     ctx.drawImage(video,cropX,cropY,cropWidth,cropHeight,0,0,cropWidth*2,cropHeight*2);
@@ -2195,15 +2196,9 @@ select:focus{
         return;
       }
 
-      if(candidate===rdPreviousCandidate) rdStableCount++;
-      else{
-        rdPreviousCandidate=candidate;
-        rdStableCount=1;
-      }
-
       rdStatus(`Detected: ${candidate}`);
 
-      if(rdStableCount>=1){
+      if(candidate){
         const input=document.getElementById('cardNumberInput');
         if(input){
           input.value=candidate;
@@ -2234,7 +2229,7 @@ select:focus{
   function rdScanLoop(){
     if(!rdScanRunning) return;
     rdProcessFrame();
-    rdScanTimer=setTimeout(rdScanLoop,180);
+    rdScanTimer=setTimeout(rdScanLoop,70);
   }
 
   async function startRDScanner(){
