@@ -1996,7 +1996,7 @@ select:focus{
 
   const RD_MIN_DIGITS=10;
   const RD_MAX_DIGITS=12;
-  const RD_MIN_CONFIDENCE=45;
+  const RD_MIN_CONFIDENCE=40;
   const RD_REQUIRED_STABLE=1;
 
   function rdEnsureScannerUI(){
@@ -2152,8 +2152,8 @@ select:focus{
     const cropX=Math.floor((vw-cropWidth)/2);
     const cropY=Math.floor(vh*.405);
 
-    canvas.width=cropWidth*1.6;
-    canvas.height=cropHeight*1.6;
+    canvas.width=Math.floor(cropWidth*1.35);
+    canvas.height=Math.floor(cropHeight*1.35);
 
     const ctx=canvas.getContext('2d',{willReadFrequently:true});
     ctx.drawImage(video,cropX,cropY,cropWidth,cropHeight,0,0,cropWidth*2,cropHeight*2);
@@ -2229,7 +2229,7 @@ select:focus{
   function rdScanLoop(){
     if(!rdScanRunning) return;
     rdProcessFrame();
-    rdScanTimer=setTimeout(rdScanLoop,70);
+    rdScanTimer=setTimeout(rdScanLoop,20);
   }
 
   async function startRDScanner(){
