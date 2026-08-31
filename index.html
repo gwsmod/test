@@ -2024,12 +2024,12 @@ select:focus{
     modal.id='rdScanModal';
     modal.innerHTML=`
       <div class="rdScanTop">
-        <div class="rdScanTitle">📷 Bank Account Scanner</div>
+        <div class="rdScanTitle">📷 Advance Number Detector</div>
         <button type="button" class="rdScanClose" id="rdScanClose">×</button>
       </div>
       <video id="rdScanVideo" autoplay playsinline muted></video>
       <div class="rdScanBox"><div class="rdScanLine"></div></div>
-      <div class="rdScanText">Place the complete account number inside the green box</div>
+      <div class="rdScanText">Align the number inside the green line</div>
       <div class="rdScanStatus" id="rdScanStatus">Loading OCR...</div>
             <canvas id="rdScanCanvas"></canvas>
     `;
@@ -2252,7 +2252,7 @@ select:focus{
       const video=document.getElementById('rdScanVideo');
 
       modal.classList.add('active');
-      rdStatus('📷 Starting rear camera...');
+      rdStatus('📷 Starting Advance Number Detector...');
 
       rdScanStream=await navigator.mediaDevices.getUserMedia({
         audio:false,
